@@ -78,4 +78,22 @@ public class Magma {
 
         return bits;
     }
+
+    // циклический сдвиг влево (если нулевой бит справа) 0001 -> 0010.
+    // Пишет в ту же переменную
+    private void cycleShiftLeft(BitSet bits, int i) {
+        // TODO shift
+    }
+    // сумма
+    private BitSet addBitSet(BitSet left, BitSet right) {
+        if (left.size() == right.size()) {
+            BitSet bits = new BitSet(left.size());
+
+            // TODO add
+
+            return bits;
+        }
+        else
+            return null;
+    }
 }
