@@ -38,11 +38,9 @@ public class Magma {
     // обработать блок (вызывается из цикла), принимает бло 64 бита
     private BitSet block64Proc(BitSet block) {
         BitSet[] bits = new BitSet[2];
-        for (int i = 0; i < 32; i++) {
-            // делим исходный пополам и копируем в 2 битсета
-            bits[0].set(i, block.get(i));
-            bits[1].set(i+32, block.get(i+32));
-        }
+        // делим исходный пополам и копируем в 2 битсета по 32 бита
+        bits[0] = block.get(0, 32);
+        bits[1] = block.get(32, 64);
 
         // TODO block proc
 
@@ -79,21 +77,59 @@ public class Magma {
         return bits;
     }
 
-    // циклический сдвиг влево (если нулевой бит справа) 0001 -> 0010.
-    // Пишет в ту же переменную
-    private void cycleShiftLeft(BitSet bits, int i) {
-        // TODO shift
+    // циклический сдвиг вправо (если нулевой бит справа) 0001 -> 0010
+    private BitSet cycleShiftRight(BitSet bits, int bsize, int k) {
+        BitSet bitsForShift = new BitSet();
+
+        for(int j = 0; j < bsize-k; j++)
+            bitsForShift.set(j, bits.get(j+k)); // выполняем простой сдвиг
+        for (int j = 0; j < k; j++)
+            bitsForShift.set(j+bsize-k, bits.get(j)); // записываем с образовавшихся нулей потерянную часть битов
+
+        return bitsForShift; // переносим обратно в переменную
     }
+    // циклический сдвиг влево (если нулевой бит справа) 0001 -> 0010
+    private BitSet cycleShiftLeft(BitSet bits, int bsize, int k) {
+        BitSet bitsForShift = new BitSet();
+
+        for(int j = 0; j < bsize-k; j++)
+            bitsForShift.set(j+k, bits.get(j)); // выполняем простой сдвиг, перенося биты в лево
+        for (int j = 0; j < k; j++)
+            bitsForShift.set(j, bits.get(j+bsize-k)); // записываем с образовавшихся нулей потерянную часть битов
+
+        return bitsForShift; // переносим обратно в переменную
+    }
+
     // сумма
-    private BitSet addBitSet(BitSet left, BitSet right) {
-        if (left.size() == right.size()) {
-            BitSet bits = new BitSet(left.size());
+    private BitSet addBitSet(BitSet left, BitSet right, int size) {
+        BitSet bits = new BitSet(size);
 
-            // TODO add
+        // TODO add
 
-            return bits;
-        }
-        else
-            return null;
+        return bits;
     }
+
+
+
+
+
+    // DEBUG
+    private void showBitSet(BitSet a, int size) {
+        for (int i = 0; i < size; i++)
+            System.out.print(a.get(i) == true ? 1 : 0);
+
+        System.out.println();
+    }
+
+    public void debug() {
+        BitSet sss = new BitSet(64);
+
+        for(int i = 0; i < 64; i++)
+            sss.set(i, true);
+        sss.set(0, false);
+        sss.set(32, false);
+
+        block64Proc(sss);
+    }
+
 }
